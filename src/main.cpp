@@ -80,10 +80,10 @@ Options:\n\
             cc += "MSVC v" + to_string(_MSC_FULL_VER / 10000000) + "." + to_string((_MSC_FULL_VER % 10000000) / 100000) + "." + to_string(_MSC_FULL_VER % 100000) + "." + to_string(_MSC_BUILD);
 #endif
 #ifdef __GNUC__
-            cc += "GCC v" + __VERSION__;
+            cc += string("GCC v") + __VERSION__;
 #endif
 #ifdef __clang__
-            cc += "Clang v" + __clang_version__;
+            cc += string("Clang v") + __clang_version__;
 #endif
             if (cc.empty()) cc = "Unknown";
             printf("RunHiddenConsole  Copyright (C) 2021  lifegpc\n\
