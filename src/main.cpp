@@ -62,7 +62,7 @@ int main(int argc, char* argv[]) {
 #endif
     list<string> cml;
     int c;
-    while ((c = getopt_long(rargc, rargv, "-vh", opts, nullptr)) != -1) {
+    while ((c = getopt_long(rargc, rargv, "+vh", opts, nullptr)) != -1) {
         switch (c)
         {
         case 'h':
@@ -91,19 +91,19 @@ This program comes with ABSOLUTELY NO WARRANTY.\n\
 This is free software, and you are welcome to redistribute it\n\
 under GNU GPL Version 3.\n\
 Version: %s\n\
-Build with %s\n", "1.0.0", cc.c_str());
+Build with %s\n", "1.0.1", cc.c_str());
         }
             if (use_wv) util::freeArgv(rargv, rargc);
             return 0;
-        case 1:
-            cml.push_back(optarg);
-            break;
         case '?':
         default:
             fprintf(stderr, "Use -h to see help.");
             if (use_wv) util::freeArgv(rargv, rargc);
             return -1;
         }
+    }
+    for (int i = optind; i < rargc; i++) {
+        cml.push_back(rargv[i]);
     }
     if (use_wv) util::freeArgv(rargv, rargc);
     if (cml.empty()) {

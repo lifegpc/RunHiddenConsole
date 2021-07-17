@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.0)
 
-set(VER 1.0.0)
+set(VER 1.0.1)
 
 project(RunHiddenConsole VERSION ${VER})
 
