@@ -111,8 +111,7 @@ Build with %s\n", "1.0.0", cc.c_str());
         return -1;
     }
     string AppName, CommandLine;
-    AppName = cml.front();
-    if (AppName.find(' ') != string::npos) AppName = "\"" + AppName + "\"";
+    AppName = "";
     for (auto i = cml.begin(); i != cml.end(); ++i) {
         auto s = *i;
         if (s.find(' ') != string::npos) s = "\"" + s + "\"";
@@ -133,7 +132,7 @@ Build with %s\n", "1.0.0", cc.c_str());
             ZeroMemory(&si, sizeof(si));
             si.cb = sizeof(si);
             ZeroMemory(&pi, sizeof(pi));
-            if (CreateProcessW(wAppName.c_str(), temp, nullptr, nullptr, FALSE, CREATE_NO_WINDOW, nullptr, nullptr, &si, &pi)) {
+            if (CreateProcessW(nullptr, temp, nullptr, nullptr, FALSE, CREATE_NO_WINDOW, nullptr, nullptr, &si, &pi)) {
                 CloseHandle(pi.hProcess);
                 CloseHandle(pi.hThread);
             } else {
@@ -154,7 +153,7 @@ Build with %s\n", "1.0.0", cc.c_str());
             }
             memcpy(temp, CommandLine.c_str(), CommandLine.size());
             temp[CommandLine.size()] = 0;
-            if (CreateProcessA(AppName.c_str(), temp, nullptr, nullptr, FALSE, CREATE_NO_WINDOW, nullptr, nullptr, &si, &pi)) {
+            if (CreateProcessA(nullptr, temp, nullptr, nullptr, FALSE, CREATE_NO_WINDOW, nullptr, nullptr, &si, &pi)) {
                 CloseHandle(pi.hProcess);
                 CloseHandle(pi.hThread);
             } else {
