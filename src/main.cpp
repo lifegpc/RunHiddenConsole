@@ -1,5 +1,5 @@
 /*  This file is a part of RunHiddenConsole.
-    Copyright (C) 2021 lifegpc
+    Copyright (C) 2021-2022 lifegpc
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -40,9 +40,11 @@ int main(int argc, char* argv[]) {
     const struct option opts[] = {
         {"help", 0, nullptr, 'h'},
         {"version", 0, nullptr, 'v'},
+        {"inherit", 0, nullptr, 'i'},
         nullptr
     };
     bool use_wv = false;
+    BOOL inherit = FALSE;
 #if defined(HAVE_GETCOMMANDLINEW) && defined(HAVE_COMMANDLINETOARGVW)
     char** nargv = nullptr;
     auto cl = GetCommandLineW();
@@ -62,7 +64,7 @@ int main(int argc, char* argv[]) {
 #endif
     list<string> cml;
     int c;
-    while ((c = getopt_long(rargc, rargv, "+vh", opts, nullptr)) != -1) {
+    while ((c = getopt_long(rargc, rargv, "+vhi", opts, nullptr)) != -1) {
         switch (c)
         {
         case 'h':
@@ -70,7 +72,8 @@ int main(int argc, char* argv[]) {
 RunHiddenConsole [options] <command line>\n\
 Options:\n\
 -v  --version   Show program version and then exit.\n\
--h  --help      Show help information and then exit.\n");
+-h  --help      Show help information and then exit.\n\
+-i  --inherit   Enable inherit Handles.\n");
             if (use_wv) util::freeArgv(rargv, rargc);
             return 0;
         case 'v':
@@ -86,15 +89,18 @@ Options:\n\
             cc += string("Clang v") + __clang_version__;
 #endif
             if (cc.empty()) cc = "Unknown";
-            printf("RunHiddenConsole  Copyright (C) 2021  lifegpc\n\
+            printf("RunHiddenConsole  Copyright (C) 2021-2022  lifegpc\n\
 This program comes with ABSOLUTELY NO WARRANTY.\n\
 This is free software, and you are welcome to redistribute it\n\
 under GNU GPL Version 3.\n\
 Version: %s\n\
-Build with %s\n", "1.0.1", cc.c_str());
+Build with %s\n", "1.1.0", cc.c_str());
         }
             if (use_wv) util::freeArgv(rargv, rargc);
             return 0;
+        case 'i':
+            inherit = TRUE;
+            break;
         case '?':
         default:
             fprintf(stderr, "Use -h to see help.");
@@ -132,7 +138,7 @@ Build with %s\n", "1.0.1", cc.c_str());
             ZeroMemory(&si, sizeof(si));
             si.cb = sizeof(si);
             ZeroMemory(&pi, sizeof(pi));
-            if (CreateProcessW(nullptr, temp, nullptr, nullptr, FALSE, CREATE_NO_WINDOW, nullptr, nullptr, &si, &pi)) {
+            if (CreateProcessW(nullptr, temp, nullptr, nullptr, inherit, CREATE_NO_WINDOW, nullptr, nullptr, &si, &pi)) {
                 CloseHandle(pi.hProcess);
                 CloseHandle(pi.hThread);
             } else {
@@ -153,7 +159,7 @@ Build with %s\n", "1.0.1", cc.c_str());
             }
             memcpy(temp, CommandLine.c_str(), CommandLine.size());
             temp[CommandLine.size()] = 0;
-            if (CreateProcessA(nullptr, temp, nullptr, nullptr, FALSE, CREATE_NO_WINDOW, nullptr, nullptr, &si, &pi)) {
+            if (CreateProcessA(nullptr, temp, nullptr, nullptr, inherit, CREATE_NO_WINDOW, nullptr, nullptr, &si, &pi)) {
                 CloseHandle(pi.hProcess);
                 CloseHandle(pi.hThread);
             } else {
